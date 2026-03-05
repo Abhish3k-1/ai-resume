@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 AI Resume Maker
 
-## Getting Started
+A full-stack web application that allows users to seamlessly generate professional, ATS-optimized, beautifully styled A4 resumes in seconds using advanced AI (Google Gemini via OpenRouter). 
 
-First, run the development server:
+Designed with modern aesthetics and complete mobile responsiveness, the app lets users input their experiences, education, and skills, generating a print-ready PDF template with AI-crafted professional summaries and achievement-oriented bullet points.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Key Features
+- **🤖 AI-Powered Generation:** Uses cutting-edge AI to instantly write comprehensive, recruiter-ready resume content tailored to your target job role.
+- **📄 ATS Optimization:** Output HTML is strictly formatted without complex styling blocks that traditionally break Applicant Tracking Systems. It's clean, lightweight, and parsed flawlessly by modern HR software.
+- **📱 Fully Responsive:** The entire interface (Hompage, Builder Form, and Document Preview) scales perfectly across mobile phones, tablets, and desktop devices.
+- **📝 Real-time Builder:** Dynamic input builder allowing users to infinitely scale experiences, skills, projects, and certifications. Empty/optional inputs are automatically smartly omitted by the AI.
+- **🖨️ A4 Export Engine:** Powered by `html2pdf.js`, automatically generating exact 210mm x 297mm PDF documents ready for professional printing or digital distribution.
+- **🔐 Secure Authentication:** Full user authentication handling utilizing Supabase to safely store logic and user states.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
+- **Framework:** Next.js 14 (App Router)
+- **Styling:** Tailwind CSS + Framer Motion (Animations)
+- **Database/Auth:** Supabase & PostgreSQL
+- **AI Integration:** OpenRouter API (Google Gemini 2.0 Flash Model)
+- **Icons:** Lucide React
+- **Exporting:** html2pdf.js
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
 
-## Learn More
+You will need modern Node.js installed, along with a Supabase project and an OpenRouter API key.
 
-To learn more about Next.js, take a look at the following resources:
+### Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd <project-directory>
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. **Configure Environment Variables:**
+   Create a `.env.local` file in the root directory and add the following keys:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   OPENROUTER_API_KEY=your_openrouter_api_key
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Run the Development Server:**
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application!
+
+## 📸 Usage & Workflow
+1. **Signup / Login:** New users must create an account via Supabase Auth.
+2. **Dashboard Builder:** The user is redirected to the `/builder` interface where they can input their details (Job titles, Dates, Technologies).
+3. **Generation:** When "Generate" is clicked, the backend securely prompts the OpenRouter API for a completely semantic HTML string rendering of the professional resume.
+4. **Preview & Download:** The generated resume is displayed in a responsive scaling container. The user can hit "Download PDF" to serialize the raw A4 formatted nodes into a high-quality `.pdf` document.
+
+## 📄 Licensing & Contribution
+This project is open-source. Feedback and contributions are welcome!
