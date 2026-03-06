@@ -21,7 +21,7 @@ export default function PreviewPage() {
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
-                className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl"
+                className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0f0b1a]/80 backdrop-blur-xl"
             >
                 <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
                     <Link href="/templates" className="flex items-center gap-2 group">
@@ -35,7 +35,7 @@ export default function PreviewPage() {
                     <div className="flex items-center gap-2">
                         <Link
                             href="/my-resume"
-                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-indigo-600 rounded-xl hover:bg-indigo-50/50 transition-all"
+                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white rounded-xl hover:bg-white/5 transition-all"
                         >
                             <FileText className="h-4 w-4" />
                             <span className="hidden sm:inline">My Resume</span>
@@ -53,10 +53,10 @@ export default function PreviewPage() {
                     transition={{ duration: 0.5 }}
                     className="mb-8 text-center"
                 >
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold text-white">
                         Your Resume is Ready
                     </h1>
-                    <p className="mt-2 text-gray-500">
+                    <p className="mt-2 text-gray-400">
                         Review your AI-generated resume below and download it as PDF.
                     </p>
                 </motion.div>
