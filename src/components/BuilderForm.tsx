@@ -34,13 +34,13 @@ function SectionCard({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay, duration: 0.4 }}
-            className="rounded-2xl border border-gray-200/60 bg-white/70 backdrop-blur-sm p-6 shadow-sm hover:shadow-md transition-shadow"
+            className="rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm p-6 shadow-sm hover:shadow-md transition-shadow"
         >
             <div className="flex items-center gap-3 mb-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md">
                     <Icon className="h-5 w-5 text-white" />
                 </div>
-                <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+                <h2 className="text-lg font-semibold text-white">{title}</h2>
             </div>
             {children}
         </motion.section>
@@ -53,12 +53,12 @@ function Input({
 }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) {
     return (
         <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
                 {label}
             </label>
             <input
                 {...props}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all"
             />
         </div>
     );
@@ -70,13 +70,13 @@ function TextArea({
 }: { label: string } & React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
     return (
         <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
                 {label}
             </label>
             <textarea
                 {...props}
                 rows={3}
-                className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all resize-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all resize-none"
             />
         </div>
     );
@@ -157,12 +157,19 @@ export default function BuilderForm() {
 
             setGeneratedHtml(data.html);
 
-            // Save to Supabase
+            // Save to Supabase (keep only the latest resume per user)
             const supabase = createClient();
             const {
                 data: { user },
             } = await supabase.auth.getUser();
             if (user) {
+                // Delete any previous resumes for this user
+                await supabase
+                    .from("resumes")
+                    .delete()
+                    .eq("user_id", user.id);
+
+                // Insert the new resume
                 await supabase.from("resumes").insert({
                     user_id: user.id,
                     target_role: resumeData.targetRole,
@@ -207,9 +214,9 @@ export default function BuilderForm() {
             {/* Experience */}
             <SectionCard icon={Briefcase} title="Experience (Optional)" delay={0.1}>
                 {resumeData.experience.map((exp, i) => (
-                    <div key={i} className="mb-4 rounded-xl border border-gray-100 bg-gray-50/30 p-4 relative">
+                    <div key={i} className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4 relative">
                         {resumeData.experience.length > 1 && (
-                            <button onClick={() => removeItem("experience", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                            <button onClick={() => removeItem("experience", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
                                 <Trash2 className="h-4 w-4" />
                             </button>
                         )}
@@ -225,7 +232,7 @@ export default function BuilderForm() {
                         </div>
                     </div>
                 ))}
-                <button onClick={() => addItem("experience")} className="flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer">
+                <button onClick={() => addItem("experience")} className="flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
                     <Plus className="h-4 w-4" /> Add Experience
                 </button>
             </SectionCard>
@@ -233,9 +240,9 @@ export default function BuilderForm() {
             {/* Education */}
             <SectionCard icon={GraduationCap} title="Education (Optional)" delay={0.15}>
                 {resumeData.education.map((edu, i) => (
-                    <div key={i} className="mb-4 rounded-xl border border-gray-100 bg-gray-50/30 p-4 relative">
+                    <div key={i} className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4 relative">
                         {resumeData.education.length > 1 && (
-                            <button onClick={() => removeItem("education", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                            <button onClick={() => removeItem("education", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
                                 <Trash2 className="h-4 w-4" />
                             </button>
                         )}
@@ -248,7 +255,7 @@ export default function BuilderForm() {
                         </div>
                     </div>
                 ))}
-                <button onClick={() => addItem("education")} className="flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer">
+                <button onClick={() => addItem("education")} className="flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
                     <Plus className="h-4 w-4" /> Add Education
                 </button>
             </SectionCard>
@@ -262,17 +269,17 @@ export default function BuilderForm() {
                                 value={skill}
                                 placeholder="e.g. React"
                                 onChange={(e) => updateSkill(i, e.target.value)}
-                                className="w-36 rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-2.5 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                                className="w-36 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all"
                             />
                             {resumeData.skills.length > 1 && (
-                                <button onClick={() => removeSkill(i)} className="p-1 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                                <button onClick={() => removeSkill(i)} className="p-1 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
                                     <Trash2 className="h-3.5 w-3.5" />
                                 </button>
                             )}
                         </div>
                     ))}
                 </div>
-                <button onClick={addSkill} className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer">
+                <button onClick={addSkill} className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
                     <Plus className="h-4 w-4" /> Add Skill
                 </button>
             </SectionCard>
@@ -280,9 +287,9 @@ export default function BuilderForm() {
             {/* Projects */}
             <SectionCard icon={FolderOpen} title="Projects (Optional)" delay={0.25}>
                 {resumeData.projects.map((proj, i) => (
-                    <div key={i} className="mb-4 rounded-xl border border-gray-100 bg-gray-50/30 p-4 relative">
+                    <div key={i} className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4 relative">
                         {resumeData.projects.length > 1 && (
-                            <button onClick={() => removeItem("projects", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                            <button onClick={() => removeItem("projects", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
                                 <Trash2 className="h-4 w-4" />
                             </button>
                         )}
@@ -296,7 +303,7 @@ export default function BuilderForm() {
                         </div>
                     </div>
                 ))}
-                <button onClick={() => addItem("projects")} className="flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer">
+                <button onClick={() => addItem("projects")} className="flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
                     <Plus className="h-4 w-4" /> Add Project
                 </button>
             </SectionCard>
@@ -304,9 +311,9 @@ export default function BuilderForm() {
             {/* Certifications */}
             <SectionCard icon={Award} title="Certifications (Optional)" delay={0.3}>
                 {resumeData.certifications.map((cert, i) => (
-                    <div key={i} className="mb-4 rounded-xl border border-gray-100 bg-gray-50/30 p-4 relative">
+                    <div key={i} className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4 relative">
                         {resumeData.certifications.length > 1 && (
-                            <button onClick={() => removeItem("certifications", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors cursor-pointer">
+                            <button onClick={() => removeItem("certifications", i)} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
                                 <Trash2 className="h-4 w-4" />
                             </button>
                         )}
@@ -317,7 +324,7 @@ export default function BuilderForm() {
                         </div>
                     </div>
                 ))}
-                <button onClick={() => addItem("certifications")} className="flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer">
+                <button onClick={() => addItem("certifications")} className="flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
                     <Plus className="h-4 w-4" /> Add Certification
                 </button>
             </SectionCard>

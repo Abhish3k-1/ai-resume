@@ -38,7 +38,7 @@ export default function LoginPage() {
         setWelcome(`Welcome back, ${username}`);
 
         setTimeout(() => {
-            router.push("/builder");
+            router.push("/templates");
         }, 1500);
     };
 
@@ -46,10 +46,11 @@ export default function LoginPage() {
         <div className="min-h-screen flex">
             {/* Left panel */}
             <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-center p-16 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700" />
-                <div className="absolute inset-0 opacity-20">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600" />
+                <div className="absolute inset-0">
                     <div className="absolute -top-20 -left-20 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
-                    <div className="absolute bottom-20 right-10 h-60 w-60 rounded-full bg-purple-400/20 blur-3xl" />
+                    <div className="absolute bottom-20 right-10 h-60 w-60 rounded-full bg-pink-400/20 blur-3xl" />
+                    <div className="absolute top-1/2 left-1/3 h-40 w-40 rounded-full bg-indigo-400/20 blur-2xl" />
                 </div>
                 <motion.div
                     initial={{ opacity: 0, x: -30 }}
@@ -74,7 +75,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right panel */}
-            <div className="flex-1 flex items-center justify-center p-8">
+            <div className="flex-1 flex items-center justify-center p-8 bg-[#0f0b1a]">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -87,54 +88,54 @@ export default function LoginPage() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="text-center py-12"
                         >
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mx-auto mb-6 shadow-xl shadow-indigo-500/25">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 mx-auto mb-6 shadow-xl shadow-indigo-500/25">
                                 <Sparkles className="h-8 w-8 text-white" />
                             </div>
-                            <h2 className="text-2xl font-bold text-gray-900">{welcome}</h2>
-                            <p className="mt-2 text-gray-500">Redirecting to your dashboard...</p>
+                            <h2 className="text-2xl font-bold text-white">{welcome}</h2>
+                            <p className="mt-2 text-gray-400">Redirecting to your dashboard...</p>
                         </motion.div>
                     ) : (
                         <>
                             <div className="mb-8">
-                                <h1 className="text-3xl font-bold text-gray-900">
+                                <h1 className="text-3xl font-bold text-white">
                                     Welcome back
                                 </h1>
-                                <p className="mt-2 text-gray-500">
+                                <p className="mt-2 text-gray-400">
                                     Sign in to your account to continue
                                 </p>
                             </div>
 
                             <form onSubmit={handleLogin} className="flex flex-col gap-5">
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
                                         Email
                                     </label>
                                     <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                                         <input
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             required
                                             placeholder="you@email.com"
-                                            className="w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-4 py-3.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                                            className="w-full rounded-xl border border-white/10 bg-white/5 pl-11 pr-4 py-3.5 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col gap-1.5">
-                                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
                                         Password
                                     </label>
                                     <div className="relative">
-                                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                                         <input
                                             type="password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             required
                                             placeholder="••••••••"
-                                            className="w-full rounded-xl border border-gray-200 bg-gray-50/50 pl-11 pr-4 py-3.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                                            className="w-full rounded-xl border border-white/10 bg-white/5 pl-11 pr-4 py-3.5 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
                                         />
                                     </div>
                                 </div>
@@ -143,7 +144,7 @@ export default function LoginPage() {
                                     <motion.p
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="text-sm text-red-500 bg-red-50 rounded-xl px-4 py-3"
+                                        className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3"
                                     >
                                         {error}
                                     </motion.p>
@@ -154,7 +155,7 @@ export default function LoginPage() {
                                     whileTap={{ scale: 0.98 }}
                                     type="submit"
                                     disabled={loading}
-                                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all disabled:opacity-50 cursor-pointer"
+                                    className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all disabled:opacity-50 cursor-pointer"
                                 >
                                     {loading ? "Signing in..." : "Login"}
                                     {!loading && <ArrowRight className="h-4 w-4" />}
@@ -165,7 +166,7 @@ export default function LoginPage() {
                                 Don&apos;t have an account?{" "}
                                 <Link
                                     href="/signup"
-                                    className="font-medium text-indigo-600 hover:text-indigo-700 transition-colors"
+                                    className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
                                 >
                                     Create Account
                                 </Link>

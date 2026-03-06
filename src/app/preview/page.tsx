@@ -4,7 +4,7 @@ import ResumePreview from "@/components/ResumePreview";
 import LogoutButton from "@/components/LogoutButton";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Sparkles, FileText } from "lucide-react";
 
 export default function PreviewPage() {
     return (
@@ -24,7 +24,7 @@ export default function PreviewPage() {
                 className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl"
             >
                 <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-                    <Link href="/" className="flex items-center gap-2 group">
+                    <Link href="/templates" className="flex items-center gap-2 group">
                         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25 transition-shadow group-hover:shadow-indigo-500/40">
                             <Sparkles className="h-5 w-5 text-white" />
                         </div>
@@ -32,7 +32,16 @@ export default function PreviewPage() {
                             ResumeAI
                         </span>
                     </Link>
-                    <LogoutButton />
+                    <div className="flex items-center gap-2">
+                        <Link
+                            href="/my-resume"
+                            className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-600 hover:text-indigo-600 rounded-xl hover:bg-indigo-50/50 transition-all"
+                        >
+                            <FileText className="h-4 w-4" />
+                            <span className="hidden sm:inline">My Resume</span>
+                        </Link>
+                        <LogoutButton />
+                    </div>
                 </div>
             </motion.header>
 

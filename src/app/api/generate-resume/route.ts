@@ -1,8 +1,47 @@
 import { NextResponse } from "next/server";
+import { getTemplateById } from "@/lib/templates";
 
 export async function POST(request: Request) {
     try {
         const resumeData = await request.json();
+
+        const template = getTemplateById(resumeData.templateId || "");
+        const layoutInstructions = template
+            ? template.promptStyle
+            : `
+Main Container:
+style="width: 210mm; min-height: 297mm; max-width: 210mm; margin: 0 auto; background: white; padding: 20mm; box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.6;"
+
+HEADER:
+- Name: style="font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 2px; color: #111827;"
+- Contact line: style="font-size: 13px; color: #4B5563; text-align: center; margin: 0 0 16px 0;" separator " | "
+- Header divider: style="border: none; border-top: 2px solid #374151; margin: 0 0 20px 0;"
+
+SECTION TITLES:
+style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1.5px solid #d1d5db; padding-bottom: 4px; margin: 20px 0 12px 0; color: #111827;"
+
+EXPERIENCE:
+- Job Title: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
+- Company | Location | Dates: style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 8px 0;"
+- Bullets: ul style="padding-left: 20px; margin: 6px 0 16px 0; list-style-type: square;" li style="font-size: 13px; margin-bottom: 5px; color: #374151; text-align: justify;"
+
+EDUCATION:
+- Degree: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
+- Institution: style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 4px 0;"
+
+SKILLS:
+- Category bold, each line: style="font-size: 13px; margin: 0 0 6px 0; color: #374151;"
+
+PROJECTS:
+- Name: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
+- Tech: style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 6px 0;"
+
+CERTIFICATIONS:
+- Each: style="font-size: 13px; margin: 0 0 6px 0; color: #374151;"
+
+PROFESSIONAL SUMMARY:
+style="font-size: 13px; margin: 0 0 4px 0; color: #374151; text-align: justify;"
+`;
 
         const prompt = `You are an expert professional resume writer who creates real, recruiter-ready resumes.
 
@@ -20,55 +59,13 @@ CRITICAL CONTENT RULES:
 
 LAYOUT & INLINE STYLING (all styles must use the style="" attribute):
 
-Main Container:
-style="width: 210mm; min-height: 297mm; max-width: 210mm; margin: 0 auto; background: white; padding: 20mm; box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.6;"
-
-HEADER:
-- Name: style="font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 2px; color: #111827;"
-- Contact line (City | Email | Phone | LinkedIn — all on one line, centered):
-  style="font-size: 13px; color: #4B5563; text-align: center; margin: 0 0 16px 0;"
-  Use " | " as separator between contact items.
-- Header divider: style="border: none; border-top: 2px solid #374151; margin: 0 0 20px 0;"
-
-SECTION TITLES (PROFESSIONAL SUMMARY, EXPERIENCE, EDUCATION, SKILLS, PROJECTS, CERTIFICATIONS):
-style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1.5px solid #d1d5db; padding-bottom: 4px; margin: 20px 0 12px 0; color: #111827;"
-
-PROFESSIONAL SUMMARY:
-style="font-size: 13px; margin: 0 0 4px 0; color: #374151; text-align: justify;"
-
-EXPERIENCE ENTRIES:
-- Job Title: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
-- Company | Location | Dates (one line): style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 8px 0;"
-- Bullet list: ul style="padding-left: 20px; margin: 6px 0 16px 0; list-style-type: square;"
-- Each li: style="font-size: 13px; margin-bottom: 5px; color: #374151; text-align: justify;"
-- Write 2–4 achievement-oriented bullets per job. Use action verbs. Mention technologies, impact, and metrics where possible.
-
-EDUCATION ENTRIES:
-- Degree: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
-- Institution | Location: style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 4px 0;"
-- GPA and Graduation Date: style="font-size: 12px; color: #4B5563; margin: 0 0 12px 0;"
-
-SKILLS:
-- Group by category on separate lines. Format: "Category: skill1, skill2, skill3"
-- Category name: style="font-weight: 600; color: #111827;"
-- Each line: style="font-size: 13px; margin: 0 0 6px 0; color: #374151;"
-- Example output:
-  <div style="..."><strong>Languages:</strong> JavaScript, Python, HTML, CSS</div>
-
-PROJECTS:
-- Project Name: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
-- Technologies: style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 6px 0;"
-- Bullet list: ul style="padding-left: 20px; margin: 6px 0 16px 0; list-style-type: square;"
-- Description as 1–2 bullet points (li style="font-size: 13px; margin-bottom: 5px; color: #374151;").
-
-CERTIFICATIONS:
-- Name — Issuer — Date, each on its own line: style="font-size: 13px; margin: 0 0 6px 0; color: #374151;"
+${layoutInstructions}
 
 HTML RULES:
 - Use ONLY: div, h1, h2, h3, p, ul, li, strong, span, hr.
 - Do NOT include <html>, <head>, <body>, <style>, or <script> tags.
 - ALL styling must be inline using style="". No CSS classes.
-- No tables, no multi-column layouts, no images, no background gradients.
+- No tables, no multi-column layouts, no images, no background gradients (unless the template specifies a solid background color).
 - Output must strictly adhere to the inline CSS formats to ensure exact consistency and A4 PDF compatibility.
 
 Resume section order: Header → Professional Summary → Experience → Education → Skills → Projects → Certifications.

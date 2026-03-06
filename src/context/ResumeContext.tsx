@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export interface ResumeData {
+    templateId: string;
     targetRole: string;
     fullName: string;
     email: string;
@@ -45,9 +46,12 @@ interface ResumeContextType {
     setGeneratedHtml: React.Dispatch<React.SetStateAction<string>>;
     isGenerating: boolean;
     setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedTemplateId: string;
+    setSelectedTemplateId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const defaultResumeData: ResumeData = {
+    templateId: "",
     targetRole: "",
     fullName: "",
     email: "",
@@ -84,6 +88,7 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
     const [resumeData, setResumeData] = useState<ResumeData>(defaultResumeData);
     const [generatedHtml, setGeneratedHtml] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
+    const [selectedTemplateId, setSelectedTemplateId] = useState("");
 
     return (
         <ResumeContext.Provider
@@ -94,6 +99,8 @@ export function ResumeProvider({ children }: { children: ReactNode }) {
                 setGeneratedHtml,
                 isGenerating,
                 setIsGenerating,
+                selectedTemplateId,
+                setSelectedTemplateId,
             }}
         >
             {children}

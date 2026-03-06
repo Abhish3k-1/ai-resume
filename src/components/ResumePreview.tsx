@@ -3,7 +3,7 @@
 import { useResume } from "@/context/ResumeContext";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Download, ArrowLeft } from "lucide-react";
+import { Download, ArrowLeft, LayoutTemplate } from "lucide-react";
 import { useRef } from "react";
 
 export default function ResumePreview() {
@@ -30,7 +30,7 @@ export default function ResumePreview() {
     if (!generatedHtml) {
         return (
             <div className="flex flex-col items-center justify-center gap-6 py-24">
-                <p className="text-gray-500">No resume generated yet.</p>
+                <p className="text-gray-400">No resume generated yet.</p>
                 <button
                     onClick={() => router.push("/builder")}
                     className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all cursor-pointer"
@@ -50,13 +50,20 @@ export default function ResumePreview() {
             className="flex flex-col items-center gap-8"
         >
             {/* Action buttons */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center justify-center gap-3">
                 <button
                     onClick={() => router.push("/builder")}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all cursor-pointer"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     Back to Builder
+                </button>
+                <button
+                    onClick={() => router.push("/templates")}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                >
+                    <LayoutTemplate className="h-4 w-4" />
+                    Change Template
                 </button>
                 <button
                     onClick={handleDownload}

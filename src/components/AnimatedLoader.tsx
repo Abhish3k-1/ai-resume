@@ -28,10 +28,10 @@ export default function AnimatedLoader() {
 
             {/* Title */}
             <div className="text-center">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-white mb-2">
                     ✨ AI is crafting your resume...
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-400">
                     This may take a few seconds
                 </p>
             </div>
@@ -50,11 +50,11 @@ export default function AnimatedLoader() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             transition={{ delay: step.delay + 0.2, duration: 0.3 }}
-                            className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-100"
+                            className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500/20"
                         >
-                            <div className="h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+                            <div className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
                         </motion.div>
-                        <span className="text-sm text-gray-600 font-medium">
+                        <span className="text-sm text-gray-300 font-medium">
                             {step.text}
                         </span>
                     </motion.div>
