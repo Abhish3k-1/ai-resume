@@ -10,9 +10,9 @@ import {
     LayoutTemplate,
     FileText,
     Loader2,
-    Trash2,
 } from "lucide-react";
 import LogoutButton from "@/components/LogoutButton";
+import DeleteResumeButton from "@/components/DeleteResumeButton";
 import { createClient } from "@/utils/supabase/client";
 
 interface SavedResume {
@@ -26,8 +26,6 @@ export default function MyResumePage() {
     const [resume, setResume] = useState<SavedResume | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [deleting, setDeleting] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const resumeRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
@@ -81,32 +79,6 @@ export default function MyResumePage() {
             })
             .from(resumeRef.current)
             .save();
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!resume) return;
-
-        setDeleting(true);
-        try {
-            const supabase = createClient();
-            const { error: deleteError } = await supabase
-                .from("resumes")
-                .delete()
-                .eq("id", resume.id);
-
-            if (deleteError) {
-                console.error("Delete error:", deleteError);
-                alert("Failed to delete resume. Please try again.");
-            } else {
-                setResume(null);
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Failed to delete resume. Please try again.");
-        } finally {
-            setDeleting(false);
-            setShowDeleteModal(false);
-        }
     };
 
     return (
@@ -261,13 +233,7 @@ export default function MyResumePage() {
                                     <Download className="h-4 w-4" />
                                     Download PDF
                                 </button>
-                                <button
-                                    onClick={() => setShowDeleteModal(true)}
-                                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/30 text-sm font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all cursor-pointer"
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                    Delete
-                                </button>
+                                <DeleteResumeButton onDelete={() => setResume(null)} />
                             </div>
                         </div>
 
@@ -287,74 +253,6 @@ export default function MyResumePage() {
                     </motion.div>
                 )}
             </main>
-
-            {/* Delete Confirmation Modal */}
-            <AnimatePresence>
-                {showDeleteModal && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-                    >
-                        {/* Backdrop */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                            onClick={() => !deleting && setShowDeleteModal(false)}
-                        />
-
-                        {/* Modal */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            transition={{ type: "spring", duration: 0.4 }}
-                            className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#130f24] p-6 shadow-2xl"
-                        >
-                            <div className="flex flex-col items-center text-center gap-4">
-                                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 border border-red-500/20">
-                                    <Trash2 className="h-7 w-7 text-red-400" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-white">
-                                        Delete Resume?
-                                    </h3>
-                                    <p className="mt-1 text-sm text-gray-400">
-                                        This will permanently delete your saved resume.
-                                        This action cannot be undone.
-                                    </p>
-                                </div>
-                                <div className="flex w-full gap-3 mt-2">
-                                    <button
-                                        onClick={() => setShowDeleteModal(false)}
-                                        disabled={deleting}
-                                        className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer disabled:opacity-50"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={handleDeleteConfirm}
-                                        disabled={deleting}
-                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-all cursor-pointer disabled:opacity-50"
-                                    >
-                                        {deleting ? (
-                                            <>
-                                                <Loader2 className="h-4 w-4 animate-spin" />
-                                                Deleting...
-                                            </>
-                                        ) : (
-                                            "Delete"
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }

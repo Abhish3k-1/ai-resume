@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useResume } from "@/context/ResumeContext";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
@@ -109,7 +110,7 @@ export default function BuilderForm() {
     const addItem = (section: "experience" | "education" | "projects" | "certifications") => {
         const templates: Record<string, object> = {
             experience: { title: "", company: "", location: "", startDate: "", endDate: "", description: "" },
-            education: { degree: "", institution: "", location: "", graduationDate: "", gpa: "" },
+            education: { degree: "", institution: "", location: "", graduationDate: "", gradeType: "cgpa", gradeValue: "" },
             projects: { name: "", description: "", technologies: "", link: "" },
             certifications: { name: "", issuer: "", date: "" },
         };
@@ -142,6 +143,71 @@ export default function BuilderForm() {
             ...d,
             skills: d.skills.filter((_, i) => i !== index),
         }));
+
+    /* --- helpers --- */
+    const [generatingProjectDesc, setGeneratingProjectDesc] = React.useState<number | null>(null);
+
+    const handleGenerateProjectDesc = async (index: number) => {
+        const proj = resumeData.projects[index];
+        if (!proj.name) {
+            alert("Please enter a project name first.");
+            return;
+        }
+
+        setGeneratingProjectDesc(index);
+        try {
+            const res = await fetch("/api/generate-project-desc", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    projectName: proj.name,
+                    technologies: proj.technologies,
+                    targetRole: resumeData.targetRole
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Generation failed");
+
+            updateArrayItem("projects", index, "description", data.description);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to generate description. Please try again.");
+        } finally {
+            setGeneratingProjectDesc(null);
+        }
+    };
+
+    const [generatingExpDesc, setGeneratingExpDesc] = React.useState<number | null>(null);
+
+    const handleGenerateExpDesc = async (index: number) => {
+        const exp = resumeData.experience[index];
+        if (!exp.title || !exp.company) {
+            alert("Please enter a job title and company first.");
+            return;
+        }
+
+        setGeneratingExpDesc(index);
+        try {
+            const res = await fetch("/api/generate-exp-desc", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    title: exp.title,
+                    company: exp.company,
+                    targetRole: resumeData.targetRole
+                }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Generation failed");
+
+            updateArrayItem("experience", index, "description", data.description);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to generate description. Please try again.");
+        } finally {
+            setGeneratingExpDesc(null);
+        }
+    };
 
     /* --- submit --- */
     const handleGenerate = async () => {
@@ -227,8 +293,27 @@ export default function BuilderForm() {
                             <Input label="Start Date" placeholder="Jan 2022" value={exp.startDate} onChange={(e) => updateArrayItem("experience", i, "startDate", e.target.value)} />
                             <Input label="End Date" placeholder="Present" value={exp.endDate} onChange={(e) => updateArrayItem("experience", i, "endDate", e.target.value)} />
                         </div>
-                        <div className="mt-4">
-                            <TextArea label="Description" placeholder="Key achievements and responsibilities..." value={exp.description} onChange={(e) => updateArrayItem("experience", i, "description", e.target.value)} />
+                        <div className="mt-4 flex flex-col gap-2">
+                            <div className="flex items-end justify-between">
+                                <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                    Description
+                                </label>
+                                <button
+                                    onClick={() => handleGenerateExpDesc(i)}
+                                    disabled={generatingExpDesc === i}
+                                    className="flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Sparkles className="h-3.5 w-3.5" />
+                                    {generatingExpDesc === i ? "Generating..." : "✨ AI Generate"}
+                                </button>
+                            </div>
+                            <textarea
+                                value={exp.description}
+                                onChange={(e) => updateArrayItem("experience", i, "description", e.target.value)}
+                                rows={4}
+                                placeholder="Key achievements and responsibilities... (Write manually or use AI Generate)"
+                                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all resize-none"
+                            />
                         </div>
                     </div>
                 ))}
@@ -238,7 +323,7 @@ export default function BuilderForm() {
             </SectionCard>
 
             {/* Education */}
-            <SectionCard icon={GraduationCap} title="Education (Optional)" delay={0.15}>
+            <SectionCard icon={GraduationCap} title="Education" delay={0.15}>
                 {resumeData.education.map((edu, i) => (
                     <div key={i} className="mb-4 rounded-xl border border-white/10 bg-white/5 p-4 relative">
                         {resumeData.education.length > 1 && (
@@ -247,11 +332,33 @@ export default function BuilderForm() {
                             </button>
                         )}
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <Input label="Degree" placeholder="B.S. Computer Science" value={edu.degree} onChange={(e) => updateArrayItem("education", i, "degree", e.target.value)} />
-                            <Input label="Institution" placeholder="MIT" value={edu.institution} onChange={(e) => updateArrayItem("education", i, "institution", e.target.value)} />
+                            <Input label="Degree / 10th / 12th" placeholder="B.S. / 12th / 10th" value={edu.degree} onChange={(e) => updateArrayItem("education", i, "degree", e.target.value)} />
+                            <Input label="Institution" placeholder="MIT / High School" value={edu.institution} onChange={(e) => updateArrayItem("education", i, "institution", e.target.value)} />
                             <Input label="Location" placeholder="Cambridge, MA" value={edu.location} onChange={(e) => updateArrayItem("education", i, "location", e.target.value)} />
-                            <Input label="Graduation Date" placeholder="May 2023" value={edu.graduationDate} onChange={(e) => updateArrayItem("education", i, "graduationDate", e.target.value)} />
-                            <Input label="GPA" placeholder="3.9" value={edu.gpa} onChange={(e) => updateArrayItem("education", i, "gpa", e.target.value)} />
+                            <Input label="Graduation Year" placeholder="2023" value={edu.graduationDate} onChange={(e) => updateArrayItem("education", i, "graduationDate", e.target.value)} />
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                    Grade
+                                </label>
+                                <div className="flex gap-2">
+                                    <select
+                                        className="w-1/3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all cursor-pointer appearance-none"
+                                        value={edu.gradeType || "cgpa"}
+                                        onChange={(e) => updateArrayItem("education", i, "gradeType", e.target.value)}
+                                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                        style={{ WebkitAppearance: "none", MozAppearance: "none" } as any}
+                                    >
+                                        <option value="cgpa" className="bg-[#0f0b1a] text-white">CGPA</option>
+                                        <option value="percentage" className="bg-[#0f0b1a] text-white">%</option>
+                                    </select>
+                                    <input
+                                        placeholder={edu.gradeType === "percentage" ? "e.g. 85" : "e.g. 8.5"}
+                                        value={edu.gradeValue || ""}
+                                        onChange={(e) => updateArrayItem("education", i, "gradeValue", e.target.value)}
+                                        className="w-2/3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -261,7 +368,7 @@ export default function BuilderForm() {
             </SectionCard>
 
             {/* Skills */}
-            <SectionCard icon={Wrench} title="Skills (Optional)" delay={0.2}>
+            <SectionCard icon={Wrench} title="Skills" delay={0.2}>
                 <div className="flex flex-wrap gap-3">
                     {resumeData.skills.map((skill, i) => (
                         <div key={i} className="flex items-center gap-2">
@@ -298,8 +405,27 @@ export default function BuilderForm() {
                             <Input label="Technologies" placeholder="React, Node.js" value={proj.technologies} onChange={(e) => updateArrayItem("projects", i, "technologies", e.target.value)} />
                             <Input label="Link" placeholder="https://github.com/..." value={proj.link} onChange={(e) => updateArrayItem("projects", i, "link", e.target.value)} />
                         </div>
-                        <div className="mt-4">
-                            <TextArea label="Description" placeholder="What does this project do?" value={proj.description} onChange={(e) => updateArrayItem("projects", i, "description", e.target.value)} />
+                        <div className="mt-4 flex flex-col gap-2">
+                            <div className="flex items-end justify-between">
+                                <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+                                    Description
+                                </label>
+                                <button
+                                    onClick={() => handleGenerateProjectDesc(i)}
+                                    disabled={generatingProjectDesc === i}
+                                    className="flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Sparkles className="h-3.5 w-3.5" />
+                                    {generatingProjectDesc === i ? "Generating..." : "✨ AI Generate"}
+                                </button>
+                            </div>
+                            <textarea
+                                value={proj.description}
+                                onChange={(e) => updateArrayItem("projects", i, "description", e.target.value)}
+                                rows={3}
+                                placeholder="What does this project do? (Write manually or use AI Generate)"
+                                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all resize-none"
+                            />
                         </div>
                     </div>
                 ))}

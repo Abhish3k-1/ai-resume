@@ -23,7 +23,8 @@ export interface ResumeData {
         institution: string;
         location: string;
         graduationDate: string;
-        gpa: string;
+        gradeType: "cgpa" | "percentage";
+        gradeValue: string;
     }[];
     skills: string[];
     projects: {
@@ -74,7 +75,8 @@ const defaultResumeData: ResumeData = {
             institution: "",
             location: "",
             graduationDate: "",
-            gpa: "",
+            gradeType: "cgpa",
+            gradeValue: "",
         },
     ],
     skills: [""],

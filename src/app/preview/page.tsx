@@ -2,6 +2,7 @@
 
 import ResumePreview from "@/components/ResumePreview";
 import LogoutButton from "@/components/LogoutButton";
+import DeleteResumeButton from "@/components/DeleteResumeButton";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Sparkles, FileText } from "lucide-react";
@@ -33,6 +34,7 @@ export default function PreviewPage() {
                         </span>
                     </Link>
                     <div className="flex items-center gap-2">
+                        <DeleteResumeButton />
                         <Link
                             href="/my-resume"
                             className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white rounded-xl hover:bg-white/5 transition-all"

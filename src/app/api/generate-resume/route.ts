@@ -51,11 +51,20 @@ The resume must look like a real one-page resume template — NOT a simple text 
 CRITICAL CONTENT RULES:
 - YOU MUST auto-generate a Professional Summary section. The user does NOT provide one. Write a concise 2–3 sentence professional summary tailored to the target role using the user's skills, experience, education, and projects. Place it immediately after the header, before Experience.
 - Every Experience entry MUST have 2–4 strong bullet points describing responsibilities, achievements, and technologies used. Write real professional descriptions, not simple one-liners.
-- Education entries MUST include: Degree, Institution, Location, Graduation Date, and GPA (if available).
+- Education entries MUST include: Degree, Institution, Location, Graduation Year, and Grade (CGPA or Percentage, if available via gradeType/gradeValue).
 - Skills MUST be grouped by category. Example: "Languages: JavaScript, Python | Frameworks: React, Node.js | Tools: Git, MongoDB"
 - The resume must be compact with NO large blank spaces. Fill the page with meaningful content.
 - If a section has NO user data (empty fields), completely OMIT that section. Never output placeholder text like "Add experience" or "Include certifications".
 - Do NOT mention missing information. Only use data that is actually provided.
+
+CRITICAL STYLING & TEMPLATE RULES (MUST OBEY):
+- You are strictly generating HTML for the '${template?.name || "chosen"}' template.
+- YOU MUST strictly apply every single CSS rule precisely as provided in the layout instructions below.
+- Do NOT make up your own styles, colors, or fonts. You MUST use exactly the colors, fonts, and box models specified.
+- The result must look completely unique and tailored to this specific template's aesthetic (e.g., if it says to use a dark background, or large serif fonts, DO IT verbatim).
+- Every single HTML tag you output must have a \`style="..."\` attribute matching the layout instructions exactly.
+- DO NOT USE ANY EXTERNAL CSS, classes, or <style> blocks. Inline styles ONLY.
+- If the layout instructions specify a wrapper div for a section, provide it exactly.
 
 LAYOUT & INLINE STYLING (all styles must use the style="" attribute):
 
@@ -89,7 +98,7 @@ Generate ONLY the raw HTML. No markdown, no code fences, no explanations.`;
                     "X-Title": "ResumeAI",
                 },
                 body: JSON.stringify({
-                    model: "google/gemini-2.0-flash-001",
+                    model: "google/gemini-2.5-pro",
                     messages: [
                         {
                             role: "user",
@@ -97,6 +106,7 @@ Generate ONLY the raw HTML. No markdown, no code fences, no explanations.`;
                         },
                     ],
                     max_tokens: 4096,
+                    temperature: 0.1,
                 }),
             }
         );
