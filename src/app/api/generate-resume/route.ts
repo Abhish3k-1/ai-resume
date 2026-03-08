@@ -98,7 +98,7 @@ Generate ONLY the raw HTML. No markdown, no code fences, no explanations.`;
                     "X-Title": "ResumeAI",
                 },
                 body: JSON.stringify({
-                    model: "google/gemini-2.5-pro",
+                    model: "google/gemini-2.0-flash-001",
                     messages: [
                         {
                             role: "user",
