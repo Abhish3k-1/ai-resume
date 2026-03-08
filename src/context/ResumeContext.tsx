@@ -27,6 +27,8 @@ export interface ResumeData {
         gradeValue: string;
     }[];
     skills: string[];
+    softSkills: string[];
+    languages: string[];
     projects: {
         name: string;
         description: string;
@@ -80,6 +82,8 @@ const defaultResumeData: ResumeData = {
         },
     ],
     skills: [""],
+    softSkills: [""],
+    languages: [""],
     projects: [{ name: "", description: "", technologies: "", link: "" }],
     certifications: [{ name: "", issuer: "", date: "" }],
 };

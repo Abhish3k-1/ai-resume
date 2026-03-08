@@ -15,6 +15,8 @@ import {
     Plus,
     Trash2,
     Sparkles,
+    Languages,
+    Heart,
 } from "lucide-react";
 
 /* ---------- tiny helpers ---------- */
@@ -128,20 +130,20 @@ export default function BuilderForm() {
             [section]: (d as any)[section].filter((_: unknown, i: number) => i !== index),
         }));
 
-    /* --- skills helpers --- */
-    const updateSkill = (index: number, value: string) =>
+    /* --- simple array helpers --- */
+    const updateStringArrayItem = (field: "skills" | "languages" | "softSkills", index: number, value: string) =>
         setResumeData((d) => ({
             ...d,
-            skills: d.skills.map((s, i) => (i === index ? value : s)),
+            [field]: d[field].map((s, i) => (i === index ? value : s)),
         }));
 
-    const addSkill = () =>
-        setResumeData((d) => ({ ...d, skills: [...d.skills, ""] }));
+    const addStringArrayItem = (field: "skills" | "languages" | "softSkills") =>
+        setResumeData((d) => ({ ...d, [field]: [...d[field], ""] }));
 
-    const removeSkill = (index: number) =>
+    const removeStringArrayItem = (field: "skills" | "languages" | "softSkills", index: number) =>
         setResumeData((d) => ({
             ...d,
-            skills: d.skills.filter((_, i) => i !== index),
+            [field]: d[field].filter((_, i) => i !== index),
         }));
 
     /* --- helpers --- */
@@ -368,26 +370,74 @@ export default function BuilderForm() {
             </SectionCard>
 
             {/* Skills */}
-            <SectionCard icon={Wrench} title="Skills" delay={0.2}>
+            <SectionCard icon={Wrench} title="Technical Skills" delay={0.2}>
                 <div className="flex flex-wrap gap-3">
                     {resumeData.skills.map((skill, i) => (
                         <div key={i} className="flex items-center gap-2">
                             <input
                                 value={skill}
                                 placeholder="e.g. React"
-                                onChange={(e) => updateSkill(i, e.target.value)}
+                                onChange={(e) => updateStringArrayItem("skills", i, e.target.value)}
                                 className="w-36 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all"
                             />
                             {resumeData.skills.length > 1 && (
-                                <button onClick={() => removeSkill(i)} className="p-1 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
+                                <button onClick={() => removeStringArrayItem("skills", i)} className="p-1 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
                                     <Trash2 className="h-3.5 w-3.5" />
                                 </button>
                             )}
                         </div>
                     ))}
                 </div>
-                <button onClick={addSkill} className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
+                <button onClick={() => addStringArrayItem("skills")} className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
                     <Plus className="h-4 w-4" /> Add Skill
+                </button>
+            </SectionCard>
+
+            {/* Languages Known */}
+            <SectionCard icon={Languages} title="Languages Known" delay={0.22}>
+                <div className="flex flex-wrap gap-3">
+                    {resumeData.languages.map((lang, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                            <input
+                                value={lang}
+                                placeholder="e.g. English"
+                                onChange={(e) => updateStringArrayItem("languages", i, e.target.value)}
+                                className="w-36 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all"
+                            />
+                            {resumeData.languages.length > 1 && (
+                                <button onClick={() => removeStringArrayItem("languages", i)} className="p-1 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </div>
+                <button onClick={() => addStringArrayItem("languages")} className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
+                    <Plus className="h-4 w-4" /> Add Language
+                </button>
+            </SectionCard>
+
+            {/* Soft Skills */}
+            <SectionCard icon={Heart} title="Soft Skills (Optional)" delay={0.24}>
+                <div className="flex flex-wrap gap-3">
+                    {resumeData.softSkills.map((skill, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                            <input
+                                value={skill}
+                                placeholder="e.g. Leadership"
+                                onChange={(e) => updateStringArrayItem("softSkills", i, e.target.value)}
+                                className="w-36 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100/20 transition-all"
+                            />
+                            {resumeData.softSkills.length > 1 && (
+                                <button onClick={() => removeStringArrayItem("softSkills", i)} className="p-1 rounded-lg hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-colors cursor-pointer">
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                </div>
+                <button onClick={() => addStringArrayItem("softSkills")} className="mt-4 flex items-center gap-2 text-sm font-medium text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer">
+                    <Plus className="h-4 w-4" /> Add Soft Skill
                 </button>
             </SectionCard>
 

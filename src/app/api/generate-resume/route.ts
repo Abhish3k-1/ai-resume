@@ -29,7 +29,7 @@ EDUCATION:
 - Degree: style="font-size: 14px; font-weight: 600; margin: 0 0 2px 0; color: #111827;"
 - Institution: style="font-size: 12px; font-style: italic; color: #4B5563; margin: 0 0 4px 0;"
 
-SKILLS:
+SKILLS, SOFT SKILLS & LANGUAGES:
 - Category bold, each line: style="font-size: 13px; margin: 0 0 6px 0; color: #374151;"
 
 PROJECTS:
@@ -53,6 +53,7 @@ CRITICAL CONTENT RULES:
 - Every Experience entry MUST have 2–4 strong bullet points describing responsibilities, achievements, and technologies used. Write real professional descriptions, not simple one-liners.
 - Education entries MUST include: Degree, Institution, Location, Graduation Year, and Grade (CGPA or Percentage, if available via gradeType/gradeValue).
 - Skills MUST be grouped by category. Example: "Languages: JavaScript, Python | Frameworks: React, Node.js | Tools: Git, MongoDB"
+- Soft Skills and Languages Known (if provided) should be clearly listed in separate sections.
 - The resume must be compact with NO large blank spaces. Fill the page with meaningful content.
 - If a section has NO user data (empty fields), completely OMIT that section. Never output placeholder text like "Add experience" or "Include certifications".
 - Do NOT mention missing information. Only use data that is actually provided.
@@ -77,7 +78,7 @@ HTML RULES:
 - No tables, no multi-column layouts, no images, no background gradients (unless the template specifies a solid background color).
 - Output must strictly adhere to the inline CSS formats to ensure exact consistency and A4 PDF compatibility.
 
-Resume section order: Header → Professional Summary → Experience → Education → Skills → Projects → Certifications.
+Resume section order: Header → Professional Summary → Experience → Education → Skills → Soft Skills → Languages Known → Projects → Certifications.
 Only include sections that have actual data.
 
 Target Role: ${resumeData.targetRole}
